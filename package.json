@@ -1,7 +1,7 @@
 {
   "name": "tigo_challenge_bondel",
   "version": "1.0.0",
-  "description": "API based App intented for API Mocks",
+  "description": "Tigo Challenge - API based App intented for mocks of REST services",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
