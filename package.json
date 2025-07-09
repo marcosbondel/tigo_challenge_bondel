@@ -1,29 +1,41 @@
 {
-  "name": "tigo_challenge_bondel",
-  "version": "1.0.0",
-  "description": "Tigo Challenge - API based App intented for mocks of REST services",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/marcosbondel/tigo_challenge_bondel.git"
-  },
-  "keywords": [
-    "API",
-    "REST",
-    "Mocks",
-    "Services",
-    "Express",
-    "Mocha",
-    "React",
-    "Vite"
-  ],
-  "author": "Marcos Bonifasi",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/marcosbondel/tigo_challenge_bondel/issues"
-  },
-  "homepage": "https://github.com/marcosbondel/tigo_challenge_bondel#readme"
+    "name": "tigo_challenge_bondel",
+    "version": "1.0.0",
+    "description": "Tigo Challenge - API-based App intented for mocks of REST services",
+    "main": "index.js",
+    "scripts": {
+        "test": "NODE_ENV=test mocha --reporter spec 'tests/**/**/*.test.js' --exit"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/marcosbondel/tigo_challenge_bondel.git"
+    },
+    "keywords": [
+        "API",
+        "REST",
+        "Mocks",
+        "Services",
+        "Express",
+        "Mocha",
+        "React",
+        "Vite"
+    ],
+    "author": "Marcos Bonifasi",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/marcosbondel/tigo_challenge_bondel/issues"
+    },
+    "homepage": "https://github.com/marcosbondel/tigo_challenge_bondel#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^5.1.0",
+        "express-validator": "^7.2.1",
+        "helmet": "^8.1.0"
+    },
+    "devDependencies": {
+        "@faker-js/faker": "^9.9.0",
+        "chai": "^5.2.1",
+        "chai-http": "^5.1.2",
+        "mocha": "^11.7.1"
+    }
 }
