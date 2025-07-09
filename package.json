@@ -1,0 +1,29 @@
+{
+  "name": "tigo_challenge_bondel",
+  "version": "1.0.0",
+  "description": "API based App intented for API Mocks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcosbondel/tigo_challenge_bondel.git"
+  },
+  "keywords": [
+    "API",
+    "REST",
+    "Mocks",
+    "Services",
+    "Express",
+    "Mocha",
+    "React",
+    "Vite"
+  ],
+  "author": "Marcos Bonifasi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marcosbondel/tigo_challenge_bondel/issues"
+  },
+  "homepage": "https://github.com/marcosbondel/tigo_challenge_bondel#readme"
+}
