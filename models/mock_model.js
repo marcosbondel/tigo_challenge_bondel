@@ -28,37 +28,81 @@ SOFTWARE.
 const mongoose = require('mongoose')
 
 const mockSchema = new mongoose.Schema({
-    url: { 
+    nam: { 
         type: String, 
-        required: true 
+        required: true,
+        trim: true,
+        minlength: 4,
+        unique: true // Ensure that each mock has a unique name
     },
     version: {
         type: String,
-        required: true
+        required: true,
+        trim: true,
+        // Starts with 'v' followed by digits and dots, e.g., 'v1.0.0'
+        match: /^v\d+(\.\d+)*$/ // Regular expression to validate version
     },
     method: { 
         type: String, 
-        required: true 
+        required: true,
+        enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Restrict to valid HTTP methods
+        uppercase: true, // Store method in uppercase for consistency
     },
     query_params: { 
-        type: Object 
+        type: Object ,
+        default: {}, // Default to an empty object if no query params are provided
+        // Validate that query_params is an object
+        validate: {
+            validator: function(v) {
+                return typeof v === 'object' && !Array.isArray(v);
+            }
+        }
     },
     body_params: { 
-        type: Object 
+        type: Object,
+        default: {}, // Default to an empty object if no body params are provided
+        // Validate that body_params is an object
+        validate: {
+            validator: function(v) {
+                return typeof v === 'object' && !Array.isArray(v);
+            }
+        }
     },
     allowed_headers: {
-        type: Object
+        type: Object,
+        default: {}, // Default to an empty object if no headers are provided
+        // Validate that allowed_headers is an object
+        validate: {
+            validator: function(v) {
+                return typeof v === 'object' && !Array.isArray(v);
+            }
+        }
     },
     // responseBody: { type: Object },
     // status: { type: Number, default: 200 },
     content_type: { 
         type: String, 
-        default: 'application/json' 
+        default: 'application/json',
+        enum: ['application/json', 'text/plain', 'application/xml', 'text/html'], // Restrict to common content types
+        required: true // Ensure content_type is always provided
     },
     status: { 
         type: String, 
-        default: 'enabled' // In case we want to enable or disable certain endpoints
+        default: 'enabled', // In case we want to enable or disable certain endpoints
+        enum: ['enabled', 'disabled'], // Restrict to valid status values
+        required: true,
     },
+    access_token: {
+        type: String,
+        default: null, // Default to null if no access token is provided
+        trim: true, // Trim whitespace from the access token
+        validate: {
+            validator: function(v) {
+                return v === null || (typeof v === 'string' && v.length > 0);
+            },
+            message: 'Access token must be a non-empty string or null'
+        }
+    }
 }, {
     timestamps: true
 })

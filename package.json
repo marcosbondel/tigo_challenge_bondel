@@ -33,14 +33,15 @@
         "express": "^5.1.0",
         "express-validator": "^7.2.1",
         "helmet": "^8.1.0",
+        "jsonwebtoken": "^9.0.2",
         "mongoose": "^8.16.2"
     },
     "devDependencies": {
-        "chai-http": "4.3.0",
+        "@faker-js/faker": "7.6.0",
         "chai": "4.3.7",
+        "chai-http": "4.3.0",
         "mocha": "10.2.0",
         "nodemon": "2.0.22",
-        "@faker-js/faker": "7.6.0",
         "swagger-jsdoc": "^6.2.8",
         "swagger-ui-express": "^5.0.1"
     }

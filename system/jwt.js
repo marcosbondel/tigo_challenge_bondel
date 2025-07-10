@@ -26,10 +26,8 @@ SOFTWARE.
 ·
 */
 
-const http_responder = require('./http_responder')
-const jwt = require('./jwt')
+const jwt = require('jsonwebtoken')
 
-module.exports = {
-    ...http_responder,
-    ...jwt
+exports.generate_token = (data, secret = process.env.JWT_SECRET, expiresIn = process.env.JWT_EXPIRATION) => {
+  return jwt.sign(data, secret, { expiresIn })
 }

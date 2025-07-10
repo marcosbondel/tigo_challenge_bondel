@@ -29,28 +29,33 @@ SOFTWARE.
 const { 
     respond_with_success, 
     respond_with_internal_server_error, 
-    respond_with_error
+    respond_with_error,
+    generate_token,
 } = require('../system')
 const { mock_model } = require('../models')
 
+
 const create_mock = async(request, response) => {
     const { 
-        url, 
+        name, 
         method, 
         url_params,
         headers,
+        version,
         body_params,
         content_type
     } = request.body
 
     try {
         let new_mock = new mock_model({
-            url,
+            name,
             method,
             url_params,
-            body_params,
+            version,
             headers,
+            body_params,
             content_type,
+            access_token: generate_token({ url: `/api/v${version}/${name}`, method})
         })
 
         let result = await new_mock.save()

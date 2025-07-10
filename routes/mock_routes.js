@@ -27,8 +27,6 @@ SOFTWARE.
 */
 
 // · Imports
-const package_info = require('../package.json');
-const { Router } = require('express')
 const { 
     find_mocks, 
     find_mock_by_id, 
@@ -36,6 +34,9 @@ const {
     update_mock, 
     remove_mock 
 } = require('../controllers')
+const package_info = require('../package.json');
+const { Router } = require('express')
+const { check } = require('express-validator')
 
 const mock_routes = Router()
 
@@ -51,9 +52,22 @@ mock_routes.get('', (request, response) => {
 })
 
 // · Mock endpoints
-mock_routes.get('/configure-mock', find_mocks)
+mock_routes.get('/configure-mock', 
+    [
+    ], 
+    find_mocks
+)
 mock_routes.get('/configure-mock/:id', find_mock_by_id)
-mock_routes.post('/configure-mock', create_mock)
+mock_routes.post('/configure-mock', 
+    [
+        check('url', 'url is required').not().isEmpty(),
+        check('version', 'version is required').not().isEmpty(),
+        check('method', 'method is required').not().isEmpty(),
+        check('method', 'method is required').not().isIn(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']),
+        check('allowed_headers', 'allowed_headers is required').not().isEmpty(),
+    ],
+    create_mock
+)
 mock_routes.put('/configure-mock/:id', update_mock)
 mock_routes.patch('/configure-mock/:id', update_mock)
 mock_routes.delete('/configure-mock/:id', remove_mock)
