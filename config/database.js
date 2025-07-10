@@ -21,6 +21,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 ·
 */
@@ -28,18 +29,18 @@ SOFTWARE.
 const mongoose = require('mongoose')
 
 const db_connection = async() => {
+    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/mock-api'
+
     try {
-        await mongoose.connect( process.env.MONGODB_CNN, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-            useFindAndModify: false
+        await mongoose.connect(uri, {
+            family: 4
         })
 
         console.log(`Database online`)
 
     } catch (error) {
-        throw new Error(`Database error: ${err}`)
+        console.log(error)
+        process.exit(1)
     }
 }
 
