@@ -38,8 +38,9 @@ const find_resource = async(request, response) => {
 }
 
 const create_resource = async(request, response) => {
+    let { version, resource } = request.params
     try {
-
+        console.log({version, resource})
         return respond_with_success(response, { message: 'hola' })
     } catch (error) {
         console.log(error)

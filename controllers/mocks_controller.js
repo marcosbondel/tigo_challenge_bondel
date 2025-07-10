@@ -33,11 +33,12 @@ const {
     generate_token,
 } = require('../system')
 const { mock_model } = require('../models')
+const { create_collection } = require('../config')
 
 
 const create_mock = async(request, response) => {
     const { 
-        name, 
+        resource, 
         method, 
         url_params,
         headers,
@@ -48,23 +49,33 @@ const create_mock = async(request, response) => {
 
     try {
         let new_mock = new mock_model({
-            name,
+            resource,
             method,
             url_params,
-            version,
+            version: `v${version}`,
             headers,
             body_params,
             content_type,
-            access_token: generate_token({ url: `/api/v${version}/${name}`, method})
+            access_token: generate_token({ url: `/api/v${version}/${resource}`, method})
         })
 
         let result = await new_mock.save()
 
         if(!result) return respond_with_error(response)
 
+        // Create a collection for the mock if it doesn't exist
+        let result_collection = await create_collection(result.resource, result.version)
+
+        if(!result_collection.success) 
+            return respond_with_error(response, 'Could not create collection for the mock', [result_collection.error])
+
         return respond_with_success(response, result)
     } catch (error) {
+        console.log(error.name)
         console.log(error)
+        if (error.name === 'ValidationError' || error.name === 'MongoServerError') {
+            return respond_with_error(response, 'Validation failed', error.errors)
+        }
         return respond_with_internal_server_error(response)
     }
 }
