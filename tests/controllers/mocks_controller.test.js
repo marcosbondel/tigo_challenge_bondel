@@ -33,7 +33,7 @@ const package_info = require('../../package.json');
 // Tests for the root endpoint
 describe("GET:/", function () {
 
-    beforeEach(async function(){
+    before(async function(){
         this.response = await request(app).get("/")
     })
 
@@ -64,4 +64,36 @@ describe("GET:/", function () {
         expect(this.response.body.keywords).to.deep.equal(package_info.keywords)
     })
     
+})
+
+describe("POST:/configure-mock", function () {
+
+    before(async function(){
+        this.response = await request(app).post("/configure-mock").set("content-type", "application/json").send(
+            {
+                "url": "/api/v1/test",
+                "version": "1.0.0",
+                "method": "GET",
+                "url_params": ["test", "name"],
+                "query_params": {
+                    "idioma": "es"
+                },
+                "headers": {
+                    "x-api-key": "12345"
+                },
+                "body_params": ["test", "name"],
+                "status": "enabled",
+                "content_type": "application/json"
+            }
+        )
+    })
+
+    expect_response_with_successful(this.response)
+
+    // it('is expected to respond with status "ok"', function(){
+    //     expect(this.response.body).to.have.property("status")
+    //     expect(this.response.body.status).to.equal("ok")
+    // })
+
+
 })
