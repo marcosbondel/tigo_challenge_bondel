@@ -27,13 +27,13 @@ SOFTWARE.
 */
 const mongoose = require('mongoose')
 
-const mockSchema = new mongoose.Schema({
-    nam: { 
+const mock_schema = new mongoose.Schema({
+    resource: { 
         type: String, 
         required: true,
         trim: true,
         minlength: 4,
-        unique: true // Ensure that each mock has a unique name
+        unique: true, // Ensure that each mock has a unique name
     },
     version: {
         type: String,
@@ -107,4 +107,4 @@ const mockSchema = new mongoose.Schema({
     timestamps: true
 })
 
-exports.mock_model = mongoose.model('mock', mockSchema)
+exports.mock_model = mongoose.model('mock', mock_schema)
