@@ -21,20 +21,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 ·
 */
 
-const { respond_with_success } = require('../../utils')
-
-const configure_mock = async(request, response) => {
-    try {
-        return respond_with_success(response, { message: 'hola' })
-    } catch (error) {
-        console.log(error)
-    }
-}
+const app_controller = require('./mocks_controller')
+const resource_controller = require('./resources_controller')
 
 module.exports = {
-    configure_mock
+    ...app_controller,
+    ...resource_controller
 }
