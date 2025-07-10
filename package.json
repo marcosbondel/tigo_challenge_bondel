@@ -12,14 +12,16 @@
         "url": "git+https://github.com/marcosbondel/tigo_challenge_bondel.git"
     },
     "keywords": [
+        "Tigo",
         "API",
         "REST",
         "Mocks",
         "Services",
         "Express",
         "Mocha",
-        "React",
-        "Vite"
+        "Chai",
+        "MongoDB",
+        "Mongoose"
     ],
     "author": "Marcos Bonifasi",
     "license": "MIT",
@@ -34,6 +36,7 @@
         "express-validator": "^7.2.1",
         "helmet": "^8.1.0",
         "jsonwebtoken": "^9.0.2",
+        "mongodb": "^6.17.0",
         "mongoose": "^8.16.2"
     },
     "devDependencies": {
