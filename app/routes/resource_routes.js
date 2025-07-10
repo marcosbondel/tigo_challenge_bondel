@@ -26,10 +26,24 @@ SOFTWARE.
 ·
 */
 
-const mock_routes = require('./mock_routes')
-const resource_routes = require('./resource_routes')
+// · Imports
+const { Router } = require('express')
+const { 
+    find_resource,
+    create_resource,
+    update_resource,
+    delete_resource,
+} = require('../controllers')
+
+const resource_routes = Router()
+
+// · Info endpoint
+resource_routes.get('/:version/:resource', find_resource)
+resource_routes.post('/:version/:resource', create_resource)
+resource_routes.put('/:version/:resource', update_resource)
+resource_routes.patch('/:version/:resource', update_resource)
+resource_routes.delete('/:version/:resource', delete_resource)
 
 module.exports = {
-    ...mock_routes,
-    ...resource_routes
+    resource_routes
 }

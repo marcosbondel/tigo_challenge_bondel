@@ -21,6 +21,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 ·
 */
@@ -28,21 +29,34 @@ SOFTWARE.
 // · Imports
 const package_info = require('../../package.json');
 const { Router } = require('express')
-const { configure_mock } = require('../controllers/app_controller')
-const { respond_with_success } = require('../../utils')
+const { 
+    find_mocks, 
+    find_mock_by_id, 
+    create_mock, 
+    update_mock, 
+    remove_mock 
+} = require('../controllers')
 
-const app_routes = Router()
+const mock_routes = Router()
 
-app_routes.get('', (request, response) => {
-    return respond_with_success(response, {
+// · Info endpoint
+mock_routes.get('', (request, response) => {
+    response.json({
         status: 'ok',
         name: package_info.name,
         version: package_info.version,
         description: package_info.description,
     })
 })
-app_routes.post('/configure-mock.json', configure_mock)
+
+// · Mock endpoints
+mock_routes.get('/configure-mock', find_mocks)
+mock_routes.get('/configure-mock/:id', find_mock_by_id)
+mock_routes.post('/configure-mock', create_mock)
+mock_routes.put('/configure-mock/:id', update_mock)
+mock_routes.patch('/configure-mock/:id', update_mock)
+mock_routes.delete('/configure-mock/:id', remove_mock)
 
 module.exports = {
-    app_routes
+    mock_routes
 }
