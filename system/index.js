@@ -26,7 +26,7 @@ SOFTWARE.
 ·
 */
 
-const http_responder = require('../system/http_responder')
+const http_responder = require('./http_responder')
 
 module.exports = {
     ...http_responder
