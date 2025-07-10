@@ -31,7 +31,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const express = require('express')
 
-const { mock_routes, resource_routes } = require('../app/routes')
+const { mock_routes, resource_routes } = require('../routes')
 
 // · Setting up express app
 const app = express()

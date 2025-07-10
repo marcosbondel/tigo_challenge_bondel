@@ -30,7 +30,7 @@ const {
     respond_with_success, 
     respond_with_internal_server_error, 
     respond_with_error
-} = require('../../system')
+} = require('../system')
 const { mock_model } = require('../models')
 
 const create_mock = async(request, response) => {
