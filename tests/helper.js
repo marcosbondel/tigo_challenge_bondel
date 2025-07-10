@@ -26,38 +26,32 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const package_info = require('../package.json');
-const { Router } = require('express')
-const { 
-    find_mocks, 
-    find_mock_by_id, 
-    create_mock, 
-    update_mock, 
-    remove_mock 
-} = require('../controllers')
+const chai = require('chai');
+const expect = require('chai').expect;
+const chai_http = require('chai-http');
+const { faker } = require('@faker-js/faker');
 
-const mock_routes = Router()
+// · Assign http plugin to Chain Framework
+chai.use(chai_http);
 
-// · Info endpoint
-mock_routes.get('', (request, response) => {
-    response.json({
-        status: 'ok',
-        name: package_info.name,
-        version: package_info.version,
-        description: package_info.description,
-        keywords: package_info.keywords
+// · Import app
+const { app } = require('../config/app')
+
+
+// · 
+exports.app = app
+exports.expect = expect
+exports.request = chai.request
+exports.faker = faker
+exports.result = { response: undefined }
+
+exports.expect_response_with_successful = () => {
+    it('is expected to respond with a success status code (2xx)', function() {
+        expect(this.response).to.have.status(200)
     })
-})
 
-// · Mock endpoints
-mock_routes.get('/configure-mock', find_mocks)
-mock_routes.get('/configure-mock/:id', find_mock_by_id)
-mock_routes.post('/configure-mock', create_mock)
-mock_routes.put('/configure-mock/:id', update_mock)
-mock_routes.patch('/configure-mock/:id', update_mock)
-mock_routes.delete('/configure-mock/:id', remove_mock)
+    it('is expected to respond with application/json', function () {
+        expect(this.response).to.have.header('content-type', 'application/json; charset=utf-8')
+    })
 
-module.exports = {
-    mock_routes
-}
+} 

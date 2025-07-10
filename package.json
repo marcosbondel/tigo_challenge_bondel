@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "dev": "NODE_ENV=development nodemon index.js",
-        "test": "NODE_ENV=test mocha --reporter spec 'tests/**/**/*.test.js' --exit"
+        "test": "NODE_ENV=test mocha 'tests/**/**/*.test.js' --recursive --exit"
     },
     "repository": {
         "type": "git",
@@ -36,11 +36,11 @@
         "mongoose": "^8.16.2"
     },
     "devDependencies": {
-        "@faker-js/faker": "^9.9.0",
-        "chai": "^5.2.1",
-        "chai-http": "^5.1.2",
-        "mocha": "^11.7.1",
-        "nodemon": "^3.1.10",
+        "chai-http": "4.3.0",
+        "chai": "4.3.7",
+        "mocha": "10.2.0",
+        "nodemon": "2.0.22",
+        "@faker-js/faker": "7.6.0",
         "swagger-jsdoc": "^6.2.8",
         "swagger-ui-express": "^5.0.1"
     }
