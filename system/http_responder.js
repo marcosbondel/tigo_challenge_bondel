@@ -35,19 +35,19 @@ const respond_with_pagination = (res, payload) => {
 }
 
 const respond_with_error = (res, message = "Something went wrong :(", details = [], status = 400) => {
-    res.status(status).json({ success: false, message, details })
+    res.status(status).json({ message, details })
 }
 
 const respond_with_not_found = (res, message = "Resource not found :(") => {
-    res.status(404).json({ success: false, message })
+    res.status(404).json({ message })
 }
 
 const respond_with_unauthorized = (res, message = "Unauthorized! -_-") => {
-    res.status(401).json({ success: false, message })
+    res.status(401).json({ message })
 }
 
-const respond_with_internal_server_error = (res, message = "Internal Server Error") => {
-    res.status(500).json({ success: false, message })
+const respond_with_internal_server_error = (res, message = "Internal Server Error", details = []) => {
+    res.status(500).json({ message, details })
 }
 
 module.exports = {
