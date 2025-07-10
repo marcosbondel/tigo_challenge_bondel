@@ -25,17 +25,24 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const mongoose = require('mongoose')
 
-// · Default to development
-const env = process.env.NODE_ENV || 'development'
+const db_connection = async() => {
+    try {
+        await mongoose.connect( process.env.MONGODB_CNN, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false
+        })
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
+        console.log(`Database online`)
 
+    } catch (error) {
+        throw new Error(`Database error: ${err}`)
+    }
+}
 
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {
+    db_connection
+}

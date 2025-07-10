@@ -4,6 +4,7 @@
     "description": "Tigo Challenge - API-based App intented for mocks of REST services",
     "main": "index.js",
     "scripts": {
+        "dev": "NODE_ENV=development nodemon index.js",
         "test": "NODE_ENV=test mocha --reporter spec 'tests/**/**/*.test.js' --exit"
     },
     "repository": {
@@ -28,14 +29,19 @@
     "homepage": "https://github.com/marcosbondel/tigo_challenge_bondel#readme",
     "dependencies": {
         "cors": "^2.8.5",
+        "dotenv": "^17.1.0",
         "express": "^5.1.0",
         "express-validator": "^7.2.1",
-        "helmet": "^8.1.0"
+        "helmet": "^8.1.0",
+        "mongoose": "^8.16.2"
     },
     "devDependencies": {
         "@faker-js/faker": "^9.9.0",
         "chai": "^5.2.1",
         "chai-http": "^5.1.2",
-        "mocha": "^11.7.1"
+        "mocha": "^11.7.1",
+        "nodemon": "^3.1.10",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1"
     }
 }

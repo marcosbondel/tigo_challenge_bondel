@@ -25,17 +25,8 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const app_routes = require('./app_routes')
 
-// · Default to development
-const env = process.env.NODE_ENV || 'development'
-
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
-
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {
+    ...app_routes
+}

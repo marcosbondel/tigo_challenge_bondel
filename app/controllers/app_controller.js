@@ -25,17 +25,16 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const { respond_with_success } = require('../../utils')
 
-// · Default to development
-const env = process.env.NODE_ENV || 'development'
+const configure_mock = async(request, response) => {
+    try {
+        return respond_with_success(response, { message: 'hola' })
+    } catch (error) {
+        console.log(error)
+    }
+}
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
-
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {
+    configure_mock
+}

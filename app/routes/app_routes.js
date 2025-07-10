@@ -26,16 +26,23 @@ SOFTWARE.
 */
 
 // · Imports
-const dotenv = require('dotenv')
+const package_info = require('../../package.json');
+const { Router } = require('express')
+const { configure_mock } = require('../controllers/app_controller')
+const { respond_with_success } = require('../../utils')
 
-// · Default to development
-const env = process.env.NODE_ENV || 'development'
+const app_routes = Router()
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
+app_routes.get('', (request, response) => {
+    return respond_with_success(response, {
+        status: 'ok',
+        name: package_info.name,
+        version: package_info.version,
+        description: package_info.description,
+    })
+})
+app_routes.post('/configure-mock.json', configure_mock)
 
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {
+    app_routes
+}

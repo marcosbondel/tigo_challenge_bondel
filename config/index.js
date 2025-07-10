@@ -25,17 +25,6 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
-
-// · Default to development
-const env = process.env.NODE_ENV || 'development'
-
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
-
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+export * from './app'
+export * from './database'
+export * from './server'
