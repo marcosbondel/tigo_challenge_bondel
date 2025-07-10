@@ -21,20 +21,21 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 ·
 */
 
-var http = require('http')
-var { app } = require('./app')
+const http = require('http')
+const { app } = require('./app')
 
-// const MongooseConnection = require("../system/mongoose")
+const { db_connection } = require('./')
 
 // · 
 module.exports = {
     server: async() => {
         // · Init http server
-        var http_server = http.createServer(app)
+        const http_server = http.createServer(app)
 
 
         // · Init http listener
@@ -42,8 +43,8 @@ module.exports = {
             console.log(`HTTP server is listening on port: ${ process.env.SERVER_PORT }`)
         })
 
-        // · Init MongoDB with Mongoose
-        // await MongooseConnection.connect()
+        // · Init MongoDB
+        await db_connection()
 
         return http_server
 
