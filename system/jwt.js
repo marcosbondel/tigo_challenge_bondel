@@ -26,17 +26,8 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const jwt = require('jsonwebtoken')
 
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
-
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
-
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+exports.generate_token = (data, secret = process.env.JWT_SECRET, expiresIn = process.env.JWT_EXPIRATION) => {
+  return jwt.sign(data, secret, { expiresIn })
+}

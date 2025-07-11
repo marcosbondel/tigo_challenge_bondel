@@ -27,16 +27,25 @@ SOFTWARE.
 */
 
 // · Imports
-const dotenv = require('dotenv')
+const { Router } = require('express')
+const { 
+    find_resources,
+    find_resource,
+    create_resource,
+    update_resource,
+    delete_resource,
+} = require('../controllers')
 
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
+const resource_routes = Router()
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
+// · Info endpoint
+resource_routes.get('/:version/:resource', find_resources)
+resource_routes.get('/:version/:resource/:id', find_resource)
+resource_routes.post('/:version/:resource', create_resource)
+resource_routes.put('/:version/:resource/:id', update_resource)
+resource_routes.patch('/:version/:resource/:id', update_resource)
+resource_routes.delete('/:version/:resource/:id', delete_resource)
 
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {
+    resource_routes
+}

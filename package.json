@@ -1,29 +1,51 @@
 {
-  "name": "tigo_challenge_bondel",
-  "version": "1.0.0",
-  "description": "API based App intented for API Mocks",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/marcosbondel/tigo_challenge_bondel.git"
-  },
-  "keywords": [
-    "API",
-    "REST",
-    "Mocks",
-    "Services",
-    "Express",
-    "Mocha",
-    "React",
-    "Vite"
-  ],
-  "author": "Marcos Bonifasi",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/marcosbondel/tigo_challenge_bondel/issues"
-  },
-  "homepage": "https://github.com/marcosbondel/tigo_challenge_bondel#readme"
+    "name": "tigo_challenge_bondel",
+    "version": "1.0.0",
+    "description": "Tigo Challenge - API-based App intented for mocks of REST services",
+    "main": "index.js",
+    "scripts": {
+        "dev": "NODE_ENV=development nodemon index.js",
+        "test": "NODE_ENV=test mocha 'tests/**/**/*.test.js' --recursive --exit"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/marcosbondel/tigo_challenge_bondel.git"
+    },
+    "keywords": [
+        "Tigo",
+        "API",
+        "REST",
+        "Mocks",
+        "Services",
+        "Express",
+        "Mocha",
+        "Chai",
+        "MongoDB",
+        "Mongoose"
+    ],
+    "author": "Marcos Bonifasi",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/marcosbondel/tigo_challenge_bondel/issues"
+    },
+    "homepage": "https://github.com/marcosbondel/tigo_challenge_bondel#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^17.1.0",
+        "express": "^5.1.0",
+        "express-validator": "^7.2.1",
+        "helmet": "^8.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongodb": "^6.17.0",
+        "mongoose": "^8.16.2"
+    },
+    "devDependencies": {
+        "@faker-js/faker": "7.6.0",
+        "chai": "4.3.7",
+        "chai-http": "4.3.0",
+        "mocha": "10.2.0",
+        "nodemon": "2.0.22",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1"
+    }
 }

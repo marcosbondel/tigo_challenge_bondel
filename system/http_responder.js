@@ -26,17 +26,35 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const respond_with_success = (res, payload) => {
+    res.status(200).json({ data: payload })
+}
 
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
+const respond_with_pagination = (res, payload) => {
+    res.status(200).json(payload)
+}
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
+const respond_with_error = (res, message = "Something went wrong :(", details = [], status = 400) => {
+    res.status(status).json({ message, details })
+}
 
+const respond_with_not_found = (res, message = "Resource not found :(") => {
+    res.status(404).json({ message })
+}
 
-const { server } = require('./config/server')
+const respond_with_unauthorized = (res, message = "Unauthorized! -_-") => {
+    res.status(401).json({ message })
+}
 
-// · Start server
-server()
+const respond_with_internal_server_error = (res, message = "Internal Server Error", details = []) => {
+    res.status(500).json({ message, details })
+}
+
+module.exports = {
+    respond_with_success,
+    respond_with_pagination,
+    respond_with_error,
+    respond_with_not_found,
+    respond_with_unauthorized,
+    respond_with_internal_server_error
+}

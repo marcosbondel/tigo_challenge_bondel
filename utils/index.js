@@ -26,17 +26,8 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const { arrays_equal_ignore_order } = require('./compare')
 
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
-
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
-
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {
+    arrays_equal_ignore_order
+}

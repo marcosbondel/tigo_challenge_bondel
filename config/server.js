@@ -26,17 +26,27 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const http = require('http')
+const { app } = require('./app')
 
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
+const { mongoose_connection } = require('./')
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
+// · 
+module.exports = {
+    server: async() => {
+        // · Init http server
+        const http_server = http.createServer(app)
 
 
-const { server } = require('./config/server')
+        // · Init http listener
+        http_server.listen(process.env.SERVER_PORT, () => { 
+            console.log(`HTTP server is listening on port: ${ process.env.SERVER_PORT }`)
+        })
 
-// · Start server
-server()
+        // · Init MongoDB
+        await mongoose_connection()
+
+        return http_server
+
+    }
+}

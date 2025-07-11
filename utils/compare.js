@@ -26,17 +26,16 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+function arrays_equal_ignore_order(arr1, arr2) {
+    if (!Array.isArray(arr1) || !Array.isArray(arr2)) return false
+    if (arr1.length !== arr2.length) return false
 
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
+    const sorted_a = [...arr1].sort()
+    const sorted_b = [...arr2].sort()
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
+    return sorted_a.every((val, i) => val === sorted_b[i])
+}
 
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {
+    arrays_equal_ignore_order
+}

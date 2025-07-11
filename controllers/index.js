@@ -26,17 +26,10 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const app_controller = require('./mocks_controller')
+const resource_controller = require('./resources_controller')
 
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
-
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
-
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {
+    ...app_controller,
+    ...resource_controller
+}

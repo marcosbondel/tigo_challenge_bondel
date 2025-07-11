@@ -26,17 +26,32 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const chai = require('chai');
+const expect = require('chai').expect;
+const chai_http = require('chai-http');
+const { faker } = require('@faker-js/faker');
 
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
+// · Assign http plugin to Chain Framework
+chai.use(chai_http);
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
+// · Import app
+const { app } = require('../config/app')
 
 
-const { server } = require('./config/server')
+// · 
+exports.app = app
+exports.expect = expect
+exports.request = chai.request
+exports.faker = faker
+exports.result = { response: undefined }
 
-// · Start server
-server()
+exports.expect_response_with_successful = () => {
+    it('is expected to respond with a success status code (2xx)', function() {
+        expect(this.response).to.have.status(200)
+    })
+
+    it('is expected to respond with application/json', function () {
+        expect(this.response).to.have.header('content-type', 'application/json; charset=utf-8')
+    })
+
+} 

@@ -26,17 +26,15 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
+const { validationResult } = require("express-validator")
+const { respond_with_error } = require('../system')
 
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
+exports.validateFields = (request, response, next) => {
+    let validations = validationResult(request)
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
+    if(! validations.isEmpty()){
+        return respond_with_error(response, "Missing or invalid params", validations.errors)
+    }
 
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+    next()
+}

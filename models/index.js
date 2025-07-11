@@ -26,17 +26,6 @@ SOFTWARE.
 ·
 */
 
-// · Imports
-const dotenv = require('dotenv')
-
-// · Default env (development)
-const env = process.env.NODE_ENV || 'development'
-
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
-
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {
+    ...require('./mock_model')
+}
