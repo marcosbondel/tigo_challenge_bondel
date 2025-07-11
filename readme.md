@@ -6,8 +6,13 @@
 <hr/>
 
 Version 0.7.0 :octocat:
+Tech Stack: Node.js, Express, MongoDB (Atlas Clusters)
 
 Encuentra los requerimientos iniciales [aquí](./docs/requirements.md)
+```
+Hice algunos cambios en los requerimientos para que el proyecto sea genérico. 
+Como por ejemplo, los datos en las respuestas HTTP no son hardcoded, son dinámicas, procesadas por el controlador y mapeadas según la colección en MongoDB Atlas.
+```
 
 ---
 ## Tabla de contenidos
@@ -26,15 +31,15 @@ Encuentra los requerimientos iniciales [aquí](./docs/requirements.md)
   - [✅ ¡Listo!](#-listo)
 - [API Docs](#api-docs)
 - [📡 API - Gestión de Mocks](#-api---gestión-de-mocks)
-  - [🔎 GET `/api/configure-mock`](#-get-apiconfigure-mock)
-  - [🔎 GET `/api/configure-mock/:id`](#-get-apiconfigure-mockid)
-  - [➕ POST `/api/configure-mock`](#-post-apiconfigure-mock)
-  - [📝 PUT `/api/configure-mock/:id`](#-put-apiconfigure-mockid)
-  - [✏️ PATCH `/api/configure-mock/:id`](#️-patch-apiconfigure-mockid)
-  - [❌ DELETE `/api/configure-mock/:id`](#-delete-apiconfigure-mockid)
+  - [🔎 GET `/configure-mock`](#-get-configure-mock)
+  - [🔎 GET `/configure-mock/:id`](#-get-configure-mockid)
+  - [➕ POST `/configure-mock`](#-post-configure-mock)
+  - [📝 PUT `/configure-mock/:id`](#-put-configure-mockid)
+  - [✏️ PATCH `/configure-mock/:id`](#️-patch-configure-mockid)
+  - [❌ DELETE `/configure-mock/:id`](#-delete-configure-mockid)
 - [🛡️ Tokens de acceso](#️-tokens-de-acceso)
 - [🧪 Ejemplo de prueba con `curl`](#-ejemplo-de-prueba-con-curl)
-- [Lisencia](#lisencia)
+- [Licencia](#licencia)
 
 
 
@@ -200,7 +205,7 @@ Tu API debería estar corriendo en:
 
 ## 📡 API - Gestión de Mocks
 
-### 🔎 GET `/api/configure-mock`
+### 🔎 GET `/configure-mock`
 
 Obtiene una lista de todos los mocks registrados.
 
@@ -222,7 +227,7 @@ Obtiene una lista de todos los mocks registrados.
 
 ---
 
-### 🔎 GET `/api/configure-mock/:id`
+### 🔎 GET `/configure-mock/:id`
 
 Obtiene un mock específico por ID.
 
@@ -246,7 +251,7 @@ Obtiene un mock específico por ID.
 
 ---
 
-### ➕ POST `/api/configure-mock`
+### ➕ POST `/configure-mock`
 
 Crea una nueva configuración de mock.
 
@@ -281,7 +286,7 @@ Crea una nueva configuración de mock.
 
 ---
 
-### 📝 PUT `/api/configure-mock/:id`
+### 📝 PUT `/configure-mock/:id`
 
 Actualiza completamente una configuración de mock.
 
@@ -300,13 +305,13 @@ Actualiza completamente una configuración de mock.
 
 ---
 
-### ✏️ PATCH `/api/configure-mock/:id`
+### ✏️ PATCH `/configure-mock/:id`
 
 Actualiza parcialmente un mock (igual que `PUT`, pero parcial).
 
 ---
 
-### ❌ DELETE `/api/configure-mock/:id`
+### ❌ DELETE `/configure-mock/:id`
 
 Elimina una configuración de mock por ID y su colección asociada.
 
@@ -338,7 +343,7 @@ Authorization: Bearer <access_token>
 ## 🧪 Ejemplo de prueba con `curl`
 
 ```bash
-curl -X POST http://localhost:3001/api/configure-mock \
+curl -X POST http://localhost:3001/configure-mock \
   -H "Content-Type: application/json" \
   -d '{
     "resource": "clientes",
@@ -351,9 +356,8 @@ curl -X POST http://localhost:3001/api/configure-mock \
 ```
 
 ---
-## Lisencia
+## Licencia
 
-```
 MIT License
 
 Copyright (c) 2025 Marcos Bonifasi
@@ -375,6 +379,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-```
----
+<hr/>
+<br/>
+
 Built with :blue_heart: by [Marcos Bonifasi](https://github.com/marcosbondel)

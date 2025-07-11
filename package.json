@@ -4,6 +4,7 @@
     "description": "Tigo Challenge - API-based App intented for mocks of REST services",
     "main": "index.js",
     "scripts": {
+        "start": "NODE_ENV=production node index.js",
         "dev": "NODE_ENV=development nodemon index.js",
         "test": "NODE_ENV=test mocha 'tests/**/**/*.test.js' --recursive --exit"
     },
@@ -46,8 +47,6 @@
         "chai": "4.3.7",
         "chai-http": "4.3.0",
         "mocha": "10.2.0",
-        "nodemon": "2.0.22",
-        "swagger-jsdoc": "^6.2.8",
-        "swagger-ui-express": "^5.0.1"
+        "nodemon": "2.0.22"
     }
 }
