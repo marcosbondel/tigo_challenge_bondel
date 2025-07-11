@@ -69,9 +69,9 @@ const find_resources = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
+        logger.log('info', '\n')
         logger.error(`Error creating resource: ${error.message}`)
-        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
-        logger.error(`Error finding resources: ${error.message}`)
+        logger.log('info', '\n')
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -93,8 +93,9 @@ const find_resource = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
+        logger.log('info', '\n')
         logger.error(`Error creating resource: ${error.message}`)
-        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
+        logger.log('info', '\n')
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -125,7 +126,9 @@ const create_resource = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
+        logger.log('info', '\n')
         logger.error(`Error creating resource: ${error.message}`)
+        logger.log('info', '\n')
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -156,7 +159,9 @@ const update_resource = async(request, response) => {
         return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
+        logger.log('info', '\n')
         logger.error(`Error updating resource: ${error.message}`)
+        logger.log('info', '\n')
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -179,7 +184,9 @@ const delete_resource = async(request, response) => {
         return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
+        logger.log('info', '\n')
         logger.error(`Error deleting resource: ${error.message}`)
+        logger.log('info', '\n')
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }

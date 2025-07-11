@@ -6,7 +6,7 @@
 <hr/>
 
 Version 0.7.0 :octocat:
-Tech Stack: Node.js, Express, MongoDB (Atlas Clusters)
+Tech Stack: JavaScript, Node.js, Express, MongoDB (Atlas Cluster), Mongoose
 
 Encuentra los requerimientos iniciales [aquí](./docs/requirements.md)
 ```
