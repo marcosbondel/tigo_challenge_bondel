@@ -26,12 +26,53 @@ SOFTWARE.
 ·
 */
 
-const { respond_with_success } = require('../system')
+const { respond_with_success, respond_with_error } = require('../system')
+const { 
+    find_document_by_params, 
+    create_collection_document, 
+    update_collection_document,
+    list_collection_documents,
+    delete_collection_document,
+} = require('../config/database')
+const { arrays_equal_ignore_order } = require('../utils')
+const { ObjectId } = require('mongodb')
+
+
+const find_resources = async(request, response) => {
+    let { version, resource } = request.params
+    try {
+        // First, we ensure the corresponding mock exists
+        let mock = await find_document_by_params('mocks', { resource, version })
+        if (!mock.success) {
+            return respond_with_error(response, `Mock "${resource}"not found`)
+        }
+        
+        let result = await list_collection_documents(resource)
+        if (!result.success) {
+            return respond_with_error(response, `Failed to list resources: ${result.message}`)
+        }
+
+        return respond_with_success(response, result.data)
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 const find_resource = async(request, response) => {
+    let { version, resource, id } = request.params
     try {
+        // First, we ensure the corresponding mock exists
+        let mock = await find_document_by_params('mocks', { resource, version })
+        if (!mock.success) {
+            return respond_with_error(response, `Mock "${resource}"not found`)
+        }
 
-        return respond_with_success(response, { message: 'hola' })
+        let result = await find_document_by_params(resource, { _id: new ObjectId(id) })
+        if (!result.success) {
+            return respond_with_error(response, `Failed to find resource: ${result.message}`)
+        }
+
+        return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
     }
@@ -39,33 +80,85 @@ const find_resource = async(request, response) => {
 
 const create_resource = async(request, response) => {
     let { version, resource } = request.params
+    let body = request.body
     try {
-        console.log({version, resource})
-        return respond_with_success(response, { message: 'hola' })
+        // First, we ensure the corresponding mock exists
+        let mock = await find_document_by_params('mocks', { resource, version })
+        if (!mock.success) {
+            return respond_with_error(response, `Mock "${resource}"not found`)
+        }
+
+        if(!arrays_equal_ignore_order(mock.data.body_params, Object.keys(body))) {
+            return respond_with_error(
+                response, 
+                `Body parameters do not match the mock definition. Expected: ${mock.data.body_params.join(', ')}, Received: ${Object.keys(body).join(', ')}`
+            )
+        }
+
+        let result = await create_collection_document(resource, body)
+
+        if (!result.success) {
+            return respond_with_error(response, `Failed to create resource: ${result.message}`)
+        }
+
+        return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
     }
 }
 
 const update_resource = async(request, response) => {
+    let { version, resource, id } = request.params
+    let body = request.body
     try {
+        // First, we ensure the corresponding mock exists
+        let mock = await find_document_by_params('mocks', { resource, version })
+        if (!mock.success) {
+            return respond_with_error(response, `Mock "${resource}"not found`)
+        }
 
-        return respond_with_success(response, { message: 'hola' })
+        if(!arrays_equal_ignore_order(mock.data.body_params, Object.keys(body))) {
+            return respond_with_error(
+                response, 
+                `Body parameters do not match the mock definition. Expected: ${mock.data.body_params.join(', ')}, Received: ${Object.keys(body).join(', ')}`
+            )
+        }
+
+        let result = await update_collection_document(resource, id, body)
+
+        if (!result.success) {
+            return respond_with_error(response, `Failed to update resource: ${result.message}`)
+        }
+
+        return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
     }
 }
 
 const delete_resource = async(request, response) => {
+    let { version, resource, id } = request.params
     try {
+        // First, we ensure the corresponding mock exists
+        let mock = await find_document_by_params('mocks', { resource, version })
+        if (!mock.success) {
+            return respond_with_error(response, `Mock "${resource}"not found`)
+        }
 
-        return respond_with_success(response, { message: 'hola' })
+        let result = await delete_collection_document(resource, id)
+
+        if (!result.success) {
+            return respond_with_error(response, `Failed to delete resource: ${result.message}`)
+        }
+
+        return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
     }
 }
 
 module.exports = {
+    find_resources,
     find_resource,
     create_resource,
     update_resource,

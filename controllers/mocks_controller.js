@@ -33,16 +33,17 @@ const {
     generate_token,
 } = require('../system')
 const { mock_model } = require('../models')
-const { create_collection } = require('../config')
+const { create_collection, delete_collection } = require('../config')
+const { now } = require('mongoose')
 
 
 const create_mock = async(request, response) => {
     const { 
         resource, 
-        method, 
-        url_params,
-        headers,
         version,
+        method, 
+        headers,
+        query_params,
         body_params,
         content_type
     } = request.body
@@ -50,14 +51,33 @@ const create_mock = async(request, response) => {
     try {
         let new_mock = new mock_model({
             resource,
-            method,
-            url_params,
             version: `v${version}`,
+            method,
             headers,
+            query_params,
             body_params,
             content_type,
-            access_token: generate_token({ url: `/api/v${version}/${resource}`, method})
+            access_token: null // This will be set later if the mock requires authentication
         })
+
+        if(new_mock.headers.includes('Authorization')) {
+            // If the mock has an Authorization header, generate a token
+            new_mock.access_token = generate_token({ url: `/api/v${version}/${resource}`, method})
+        }
+
+        if(new_mock.method === 'POST' || new_mock.method === 'PUT' || new_mock.method === 'PATCH') {
+            // If the method is POST, PUT, or PATCH, ensure that body_params is an array
+            if(!Array.isArray(new_mock.body_params)) {
+                return respond_with_error(response, 'Body parameters must be an array for POST, PUT, or PATCH methods')
+            }
+        }
+
+        if(new_mock.method === 'GET') {
+            // If the method is GET, ensure that query_params is an array
+            if(!Array.isArray(new_mock.query_params)) {
+                return respond_with_error(response, 'Query parameters must be an array for GET method')
+            }
+        }
 
         let result = await new_mock.save()
 
@@ -129,7 +149,14 @@ const remove_mock = async(request, response) => {
     try {
         let result = await mock_model.findByIdAndDelete(id)
 
-        if( !result ) return respond_with_error(response, 'Could not delete')
+        if( !result ) return respond_with_error(response, 'Could not delete mock')
+
+        // Now, we remove all references to this mock in the collections
+        let delete_result = await delete_collection(result.resource)
+        
+        if(!delete_result) {
+            return respond_with_error(response, 'Could not delete collection references')
+        }
 
         return respond_with_success(response, result)
         
