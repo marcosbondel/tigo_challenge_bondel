@@ -37,7 +37,7 @@ const {
 const package_info = require('../package.json');
 const { Router } = require('express')
 const { check } = require('express-validator')
-const { validateFields } = require('../middlewares/validators')
+const { validateFields } = require('../middlewares')
 
 const mock_routes = Router()
 
@@ -65,7 +65,7 @@ mock_routes.post('/configure-mock',
         check('version', 'version is required').not().isEmpty(),
         check('method', 'method is required').not().isEmpty(),
         // check('method', 'method is required').not().isIn(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']),
-        check('allowed_headers', 'allowed_headers is required').not().isEmpty(),
+        check('headers', 'headers is required').not().isEmpty(),
         validateFields
     ],
     create_mock

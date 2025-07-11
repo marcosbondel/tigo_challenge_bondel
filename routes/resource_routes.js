@@ -29,6 +29,7 @@ SOFTWARE.
 // · Imports
 const { Router } = require('express')
 const { 
+    find_resources,
     find_resource,
     create_resource,
     update_resource,
@@ -38,11 +39,12 @@ const {
 const resource_routes = Router()
 
 // · Info endpoint
-resource_routes.get('/:version/:resource', find_resource)
+resource_routes.get('/:version/:resource', find_resources)
+resource_routes.get('/:version/:resource/:id', find_resource)
 resource_routes.post('/:version/:resource', create_resource)
-resource_routes.put('/:version/:resource', update_resource)
-resource_routes.patch('/:version/:resource', update_resource)
-resource_routes.delete('/:version/:resource', delete_resource)
+resource_routes.put('/:version/:resource/:id', update_resource)
+resource_routes.patch('/:version/:resource/:id', update_resource)
+resource_routes.delete('/:version/:resource/:id', delete_resource)
 
 module.exports = {
     resource_routes
