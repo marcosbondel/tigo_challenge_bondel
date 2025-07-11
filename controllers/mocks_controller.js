@@ -31,11 +31,11 @@ const {
     respond_with_internal_server_error, 
     respond_with_error,
     generate_token,
+    respond_with_not_found,
+    logger,
 } = require('../system')
 const { mock_model } = require('../models')
 const { create_collection, delete_collection } = require('../config')
-const { now } = require('mongoose')
-
 
 const create_mock = async(request, response) => {
     const { 
@@ -92,6 +92,7 @@ const create_mock = async(request, response) => {
         return respond_with_success(response, result)
     } catch (error) {
         console.log(error)
+        logger.error(`Error creating mock: ${error.message}`)
         if (error.name === 'ValidationError' || error.name === 'MongoServerError') {
             return respond_with_error(response, 'Validation failed', error.errors)
         }
@@ -108,6 +109,7 @@ const find_mocks = async(request, response) => {
         return respond_with_success(response, result )
     } catch (error) {
         console.log(error)
+        logger.error(`Error finding mocks: ${error.message}`)
         return respond_with_internal_server_error(response)
     }
 }
@@ -117,11 +119,12 @@ const find_mock_by_id = async(request, response) => {
     try {
         let result = await mock_model.findById(id)
 
-        if(!result) return respond_with_error(response, `Could not find the given id: ${id}`)
+        if(!result) return respond_with_not_found(response, `Could not find the given id: ${id}`)
 
         return respond_with_success(response, result )
     } catch (error) {
         console.log(error)
+        logger.error(`Error finding mock by ID: ${error.message}`)
         return respond_with_internal_server_error(response)
     }
 }
@@ -140,6 +143,7 @@ const update_mock = async(request, response) => {
         
     } catch (error) {
         console.log(error)
+        logger.error(`Error updating mock: ${error.message}`)
         return respond_with_internal_server_error(response)
     }
 }
@@ -162,6 +166,7 @@ const remove_mock = async(request, response) => {
         
     } catch (error) {
         console.log(error)
+        logger.error(`Error deleting mock: ${error.message}`)
         return respond_with_internal_server_error(response)
     }
 }

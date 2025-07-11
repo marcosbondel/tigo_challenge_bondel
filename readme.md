@@ -5,7 +5,8 @@
 <h3 align="center">API-based app intented for mocks of REST services</h3>
 <hr/>
 
-Version 1.0.0 :octocat:
+Version 0.7.0 :octocat:
+
 Encuentra los requerimientos iniciales [aquí](./docs/requirements.md)
 
 ---

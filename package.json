@@ -1,6 +1,6 @@
 {
     "name": "tigo_challenge_bondel",
-    "version": "1.0.0",
+    "version": "0.7.0",
     "description": "Tigo Challenge - API-based App intented for mocks of REST services",
     "main": "index.js",
     "scripts": {
@@ -38,7 +38,8 @@
         "jsonwebtoken": "^9.0.2",
         "mongodb": "^6.17.0",
         "mongoose": "^8.16.2",
-        "morgan": "^1.10.0"
+        "morgan": "^1.10.0",
+        "winston": "^3.17.0"
     },
     "devDependencies": {
         "@faker-js/faker": "7.6.0",
