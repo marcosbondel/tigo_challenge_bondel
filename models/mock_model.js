@@ -49,37 +49,36 @@ const mock_schema = new mongoose.Schema({
         uppercase: true, // Store method in uppercase for consistency
     },
     query_params: { 
-        type: Object ,
-        default: {}, // Default to an empty object if no query params are provided
-        // Validate that query_params is an object
-        validate: {
-            validator: function(v) {
-                return typeof v === 'object' && !Array.isArray(v);
-            }
-        }
+        type: Array ,
+        default: [],
+        // validate: {
+        //     validator: function(v) {
+        //         return Array.isArray(v) && v.every(param => typeof param === 'object');
+        //     },
+        //     message: 'Query parameters must be an array of objects'
+        // }
     },
     body_params: { 
-        type: Object,
-        default: {}, // Default to an empty object if no body params are provided
-        // Validate that body_params is an object
-        validate: {
-            validator: function(v) {
-                return typeof v === 'object' && !Array.isArray(v);
-            }
-        }
+        type: Array,
+        default: [],
+        // validate: {
+        //     validator: function(v) {
+        //         return Array.isArray(v) && v.every(param => typeof param === 'object');
+        //     },
+        //     message: 'Body parameters must be an array of objects'
+        // }
     },
-    allowed_headers: {
-        type: Object,
-        default: {}, // Default to an empty object if no headers are provided
-        // Validate that allowed_headers is an object
-        validate: {
-            validator: function(v) {
-                return typeof v === 'object' && !Array.isArray(v);
-            }
-        }
+    headers: {
+        type: Array,
+        default: [],
+        // validate: {
+        //     validator: function(v) {
+        //         return Array.isArray(v) && v.every(header => typeof header === 'object');
+        //     },
+        //     message: 'Headers must be an array of objects'
+        // }
     },
-    // responseBody: { type: Object },
-    // status: { type: Number, default: 200 },
+    // status: { type: Number, default: 200 }, // Not really sure if this is needed, as we can set the status in the response
     content_type: { 
         type: String, 
         default: 'application/json',
