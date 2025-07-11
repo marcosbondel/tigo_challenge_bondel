@@ -26,8 +26,8 @@ SOFTWARE.
 ·
 */
 
-const { arrays_equal_ignore_order } = require('./compare')
+const { validateFields } = require('./validators')
 
 module.exports = {
-    arrays_equal_ignore_order
+    validateFields
 }

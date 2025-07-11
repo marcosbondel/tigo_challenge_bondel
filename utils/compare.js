@@ -26,7 +26,15 @@ SOFTWARE.
 ·
 */
 
-const { arrays_equal_ignore_order } = require('./compare')
+function arrays_equal_ignore_order(arr1, arr2) {
+    if (!Array.isArray(arr1) || !Array.isArray(arr2)) return false
+    if (arr1.length !== arr2.length) return false
+
+    const sorted_a = [...arr1].sort()
+    const sorted_b = [...arr2].sort()
+
+    return sorted_a.every((val, i) => val === sorted_b[i])
+}
 
 module.exports = {
     arrays_equal_ignore_order
