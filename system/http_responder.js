@@ -26,7 +26,11 @@ SOFTWARE.
 ·
 */
 
+const { logger } = require("./logger")
+
+
 const respond_with_success = (res, payload) => {
+    logger.log('info', `Response sent successfully: ${JSON.stringify(payload)}`)
     res.status(200).json({ data: payload })
 }
 
@@ -35,18 +39,22 @@ const respond_with_pagination = (res, payload) => {
 }
 
 const respond_with_error = (res, message = "Something went wrong :(", details = [], status = 400) => {
+    logger.log('error', `Error response: ${message}, Details: ${JSON.stringify(details)}`)
     res.status(status).json({ message, details })
 }
 
 const respond_with_not_found = (res, message = "Resource not found :(") => {
+    logger.log('warn', `Resource not found: ${message}`)
     res.status(404).json({ message })
 }
 
 const respond_with_unauthorized = (res, message = "Unauthorized! -_-") => {
+    logger.log('warn', `Unauthorized access: ${message}`)
     res.status(401).json({ message })
 }
 
 const respond_with_internal_server_error = (res, message = "Internal Server Error", details = []) => {
+    logger.log('error', `Internal Server Error: ${message}, Details: ${JSON.stringify(details)}`)
     res.status(500).json({ message, details })
 }
 

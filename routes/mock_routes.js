@@ -53,26 +53,54 @@ mock_routes.get('', (request, response) => {
 })
 
 // · Mock endpoints
-mock_routes.get('/configure-mock', 
+mock_routes.get('/configure-mock', find_mocks)
+mock_routes.get('/configure-mock/:id', 
     [
-    ], 
-    find_mocks
+        check('id', 'id is required').not().isEmpty(),
+        check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateFields
+    ],
+    find_mock_by_id
 )
-mock_routes.get('/configure-mock/:id', find_mock_by_id)
 mock_routes.post('/configure-mock', 
     [
         check('resource', 'resource is required').not().isEmpty(),
         check('version', 'version is required').not().isEmpty(),
         check('method', 'method is required').not().isEmpty(),
-        // check('method', 'method is required').not().isIn(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']),
-        check('headers', 'headers is required').not().isEmpty(),
+        check('method', 'method must be a valid HTTP method').isIn(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']),
+        check('query_params', 'query_params must be an array').optional().isArray(),
+        check('body_params', 'body_params must be an array').optional().isArray(),
+        check('content_type', 'content_type is required').not().isEmpty(),
+        check('content_type', 'content_type must be a valid content type').isIn(['application/json', 'application/xml', 'text/plain']),
+        check('headers', 'headers must be an array').optional().isArray(),
         validateFields
     ],
     create_mock
 )
-mock_routes.put('/configure-mock/:id', update_mock)
-mock_routes.patch('/configure-mock/:id', update_mock)
-mock_routes.delete('/configure-mock/:id', remove_mock)
+mock_routes.put('/configure-mock/:id',
+    [
+        check('id', 'id is required').not().isEmpty(),
+        check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateFields
+    ],
+    update_mock
+)
+mock_routes.patch('/configure-mock/:id', 
+    [
+        check('id', 'id is required').not().isEmpty(),
+        check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateFields
+    ],
+    update_mock
+)
+mock_routes.delete('/configure-mock/:id', 
+    [
+        check('id', 'id is required').not().isEmpty(),
+        check('id', 'id must be a valid ObjectId').isMongoId(),
+        validateFields
+    ],
+    remove_mock
+)
 
 module.exports = {
     mock_routes

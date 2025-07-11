@@ -35,16 +35,61 @@ const {
     update_resource,
     delete_resource,
 } = require('../controllers')
+const { check } = require('express-validator')
 
 const resource_routes = Router()
 
 // · Info endpoint
-resource_routes.get('/:version/:resource', find_resources)
-resource_routes.get('/:version/:resource/:id', find_resource)
-resource_routes.post('/:version/:resource', create_resource)
-resource_routes.put('/:version/:resource/:id', update_resource)
-resource_routes.patch('/:version/:resource/:id', update_resource)
-resource_routes.delete('/:version/:resource/:id', delete_resource)
+resource_routes.get('/:version/:resource', 
+    [
+        check('version', 'version is required').not().isEmpty(),
+        check('resource', 'resource is required').not().isEmpty(),
+    ],
+    find_resources
+)
+resource_routes.get('/:version/:resource/:id', 
+    [
+        check('version', 'version is required').not().isEmpty(),
+        check('resource', 'resource is required').not().isEmpty(),
+        check('id', 'id is required').not().isEmpty(),
+        check('id', 'id must be a valid ObjectId').isMongoId(),
+    ],
+    find_resource
+)
+resource_routes.post('/:version/:resource', 
+    [
+        check('version', 'version is required').not().isEmpty(),
+        check('resource', 'resource is required').not().isEmpty(),
+    ],
+    create_resource
+)
+resource_routes.put('/:version/:resource/:id', 
+    [
+        check('version', 'version is required').not().isEmpty(),
+        check('resource', 'resource is required').not().isEmpty(),
+        check('id', 'id is required').not().isEmpty(),
+        check('id', 'id must be a valid ObjectId').isMongoId(),
+    ],
+    update_resource
+)
+resource_routes.patch('/:version/:resource/:id', 
+    [
+        check('version', 'version is required').not().isEmpty(),
+        check('resource', 'resource is required').not().isEmpty(),
+        check('id', 'id is required').not().isEmpty(),
+        check('id', 'id must be a valid ObjectId').isMongoId(),
+    ],
+    update_resource
+)
+resource_routes.delete('/:version/:resource/:id', 
+    [
+        check('version', 'version is required').not().isEmpty(),
+        check('resource', 'resource is required').not().isEmpty(),
+        check('id', 'id is required').not().isEmpty(),
+        check('id', 'id must be a valid ObjectId').isMongoId(),
+    ],
+    delete_resource
+)
 
 module.exports = {
     resource_routes

@@ -31,11 +31,11 @@ const {
     respond_with_internal_server_error, 
     respond_with_error,
     generate_token,
+    respond_with_not_found,
+    logger,
 } = require('../system')
 const { mock_model } = require('../models')
 const { create_collection, delete_collection } = require('../config')
-const { now } = require('mongoose')
-
 
 const create_mock = async(request, response) => {
     const { 
@@ -91,8 +91,8 @@ const create_mock = async(request, response) => {
 
         return respond_with_success(response, result)
     } catch (error) {
-        console.log(error.name)
         console.log(error)
+        logger.error(`Error creating mock: ${error.message}`)
         if (error.name === 'ValidationError' || error.name === 'MongoServerError') {
             return respond_with_error(response, 'Validation failed', error.errors)
         }
@@ -109,6 +109,7 @@ const find_mocks = async(request, response) => {
         return respond_with_success(response, result )
     } catch (error) {
         console.log(error)
+        logger.error(`Error finding mocks: ${error.message}`)
         return respond_with_internal_server_error(response)
     }
 }
@@ -118,11 +119,12 @@ const find_mock_by_id = async(request, response) => {
     try {
         let result = await mock_model.findById(id)
 
-        if(!result) return respond_with_error(response, `Could not find the given id: ${id}`)
+        if(!result) return respond_with_not_found(response, `Could not find the given id: ${id}`)
 
         return respond_with_success(response, result )
     } catch (error) {
         console.log(error)
+        logger.error(`Error finding mock by ID: ${error.message}`)
         return respond_with_internal_server_error(response)
     }
 }
@@ -130,16 +132,18 @@ const find_mock_by_id = async(request, response) => {
 const update_mock = async(request, response) => {
     const { id } = request.params
     const update_params = request.body
+    delete update_params._id // Remove _id from the update params if it exists, as it cannot be changed
 
     try {
         let result = await mock_model.findByIdAndUpdate(id, update_params)
 
         if( !result ) return respond_with_error(response, 'Could not update')
 
-        return respond_with_success(response, result)
+        return respond_with_success(response, 'Mock updated successfully')
         
     } catch (error) {
         console.log(error)
+        logger.error(`Error updating mock: ${error.message}`)
         return respond_with_internal_server_error(response)
     }
 }
@@ -158,10 +162,11 @@ const remove_mock = async(request, response) => {
             return respond_with_error(response, 'Could not delete collection references')
         }
 
-        return respond_with_success(response, result)
+        return respond_with_success(response, 'Mock deleted successfully')
         
     } catch (error) {
         console.log(error)
+        logger.error(`Error deleting mock: ${error.message}`)
         return respond_with_internal_server_error(response)
     }
 }

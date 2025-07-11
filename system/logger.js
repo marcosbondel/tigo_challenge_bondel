@@ -27,26 +27,32 @@ SOFTWARE.
 */
 
 // · Imports
-const dotenv = require('dotenv')
-const fs = require('fs')
+// logger.js
+const { createLogger, format, transports } = require('winston')
 const path = require('path')
+const fs = require('fs')
 
-// · Default env (development)
+// Crea logs/logs/ si no existe
 const env = process.env.NODE_ENV || 'development'
+const log_dir = path.join(__dirname, '../logs')
+if (!fs.existsSync(log_dir)) fs.mkdirSync(log_dir)
 
-// · Load the matching .env file
-dotenv.config({ path: `.env.${env}`, debug: true })
+const log_file = path.join(log_dir, `${env}.log`)
 
-// · Setup log directory
-const log_directory = path.join(__dirname, 'logs')
+const log_format = format.combine(
+  format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  format.printf(({ timestamp, level, message }) => {
+    return `${timestamp} [${level.toUpperCase()}] ${message}`
+  })
+)
 
-// · Create log directory if not exists
-if (!fs.existsSync(log_directory)) {
-    fs.mkdirSync(log_directory)
-}
+const logger = createLogger({
+  level: 'info',
+  format: log_format,
+  transports: [
+    new transports.File({ filename: log_file }),
+    new transports.Console()
+  ]
+})
 
-
-const { server } = require('./config/server')
-
-// · Start server
-server()
+module.exports = {logger}

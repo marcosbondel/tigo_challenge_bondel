@@ -30,8 +30,20 @@ SOFTWARE.
 const cors = require('cors')
 const helmet = require('helmet')
 const express = require('express')
+const morgan = require('morgan')
+const {logger} = require('../system')
+const fs = require('fs')
+const path = require('path')
 
 const { mock_routes, resource_routes } = require('../routes')
+
+// · Setup log directory
+const log_directory = path.join(__dirname, '../logs')
+
+// · Create log directory if not exists
+if (!fs.existsSync(log_directory)) {
+    fs.mkdirSync(log_directory)
+}
 
 // · Setting up express app
 const app = express()
@@ -41,6 +53,27 @@ app.use(cors({ origin: '*' }))
 app.use(helmet())
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: false }))
+
+// · Setup morgan middleware
+const morgan_format = (tokens, req, res) => {
+    return [
+        `[${tokens.method(req, res)}]`,
+        tokens.url(req, res),
+        tokens.status(req, res),
+        '-',
+        tokens['response-time'](req, res), 'ms',
+        '-',
+        `User-Agent: ${tokens['user-agent'](req, res)}`
+    ].join(' ')
+}
+
+// Log to file and console using Winston
+app.use(morgan(morgan_format, {
+    stream: {
+        write: message => logger.info(message.trim())
+    }
+}))
+
 
 // · Define endpoints and nested
 app.use('/', mock_routes)

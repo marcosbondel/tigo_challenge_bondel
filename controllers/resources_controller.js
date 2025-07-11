@@ -26,7 +26,13 @@ SOFTWARE.
 ·
 */
 
-const { respond_with_success, respond_with_error } = require('../system')
+const { 
+    respond_with_success, 
+    respond_with_error, 
+    respond_with_internal_server_error,
+    respond_with_not_found,
+    logger,
+} = require('../system')
 const { 
     find_document_by_params, 
     create_collection_document, 
@@ -44,9 +50,17 @@ const find_resources = async(request, response) => {
         // First, we ensure the corresponding mock exists
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
-            return respond_with_error(response, `Mock "${resource}"not found`)
+            return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
-        
+
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_error(response, 'Access token is required for this resource')
+            }
+        }
+
         let result = await list_collection_documents(resource)
         if (!result.success) {
             return respond_with_error(response, `Failed to list resources: ${result.message}`)
@@ -55,6 +69,10 @@ const find_resources = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
+        logger.error(`Error creating resource: ${error.message}`)
+        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
+        logger.error(`Error finding resources: ${error.message}`)
+        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
 
@@ -64,7 +82,7 @@ const find_resource = async(request, response) => {
         // First, we ensure the corresponding mock exists
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
-            return respond_with_error(response, `Mock "${resource}"not found`)
+            return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
         let result = await find_document_by_params(resource, { _id: new ObjectId(id) })
@@ -75,6 +93,9 @@ const find_resource = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
+        logger.error(`Error creating resource: ${error.message}`)
+        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
+        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
 
@@ -85,7 +106,7 @@ const create_resource = async(request, response) => {
         // First, we ensure the corresponding mock exists
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
-            return respond_with_error(response, `Mock "${resource}"not found`)
+            return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
         if(!arrays_equal_ignore_order(mock.data.body_params, Object.keys(body))) {
@@ -104,6 +125,8 @@ const create_resource = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
+        logger.error(`Error creating resource: ${error.message}`)
+        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
 
@@ -114,7 +137,7 @@ const update_resource = async(request, response) => {
         // First, we ensure the corresponding mock exists
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
-            return respond_with_error(response, `Mock "${resource}"not found`)
+            return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
         if(!arrays_equal_ignore_order(mock.data.body_params, Object.keys(body))) {
@@ -133,6 +156,8 @@ const update_resource = async(request, response) => {
         return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
+        logger.error(`Error updating resource: ${error.message}`)
+        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
 
@@ -142,7 +167,7 @@ const delete_resource = async(request, response) => {
         // First, we ensure the corresponding mock exists
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
-            return respond_with_error(response, `Mock "${resource}"not found`)
+            return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
         let result = await delete_collection_document(resource, id)
@@ -154,6 +179,8 @@ const delete_resource = async(request, response) => {
         return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
+        logger.error(`Error deleting resource: ${error.message}`)
+        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
 

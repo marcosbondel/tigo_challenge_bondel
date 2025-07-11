@@ -28,8 +28,10 @@ SOFTWARE.
 
 const http_responder = require('./http_responder')
 const jwt = require('./jwt')
+const { logger } = require('./logger')
 
 module.exports = {
     ...http_responder,
-    ...jwt
+    ...jwt,
+    logger
 }
