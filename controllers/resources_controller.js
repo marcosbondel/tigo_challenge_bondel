@@ -46,7 +46,15 @@ const find_resources = async(request, response) => {
         if (!mock.success) {
             return respond_with_error(response, `Mock "${resource}"not found`)
         }
-        
+
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_error(response, 'Access token is required for this resource')
+            }
+        }
+
         let result = await list_collection_documents(resource)
         if (!result.success) {
             return respond_with_error(response, `Failed to list resources: ${result.message}`)

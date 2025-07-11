@@ -91,7 +91,6 @@ const create_mock = async(request, response) => {
 
         return respond_with_success(response, result)
     } catch (error) {
-        console.log(error.name)
         console.log(error)
         if (error.name === 'ValidationError' || error.name === 'MongoServerError') {
             return respond_with_error(response, 'Validation failed', error.errors)
@@ -130,13 +129,14 @@ const find_mock_by_id = async(request, response) => {
 const update_mock = async(request, response) => {
     const { id } = request.params
     const update_params = request.body
+    delete update_params._id // Remove _id from the update params if it exists, as it cannot be changed
 
     try {
         let result = await mock_model.findByIdAndUpdate(id, update_params)
 
         if( !result ) return respond_with_error(response, 'Could not update')
 
-        return respond_with_success(response, result)
+        return respond_with_success(response, 'Mock updated successfully')
         
     } catch (error) {
         console.log(error)
@@ -158,7 +158,7 @@ const remove_mock = async(request, response) => {
             return respond_with_error(response, 'Could not delete collection references')
         }
 
-        return respond_with_success(response, result)
+        return respond_with_success(response, 'Mock deleted successfully')
         
     } catch (error) {
         console.log(error)

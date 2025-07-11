@@ -28,12 +28,22 @@ SOFTWARE.
 
 // · Imports
 const dotenv = require('dotenv')
+const fs = require('fs')
+const path = require('path')
 
 // · Default env (development)
 const env = process.env.NODE_ENV || 'development'
 
 // · Load the matching .env file
 dotenv.config({ path: `.env.${env}`, debug: true })
+
+// · Setup log directory
+const log_directory = path.join(__dirname, 'logs')
+
+// · Create log directory if not exists
+if (!fs.existsSync(log_directory)) {
+    fs.mkdirSync(log_directory)
+}
 
 
 const { server } = require('./config/server')
