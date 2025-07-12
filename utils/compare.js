@@ -26,7 +26,7 @@ SOFTWARE.
 ·
 */
 
-function array_includes_all(arr1, arr2) {
+function arrays_equal_ignore_order(arr1, arr2) {
     if (!Array.isArray(arr1) || !Array.isArray(arr2)) return false
 
     return arr2.every(value => arr1.includes(value))
