@@ -30,9 +30,9 @@ const { logger } = require("./logger")
 
 
 const respond_with_success = (res, payload) => {
-    logger.log('info', '\n')
+    
     logger.log('info', `Response sent successfully: ${JSON.stringify(payload)}`)
-    logger.log('info', '\n')
+    
     res.status(200).json({ data: payload })
 }
 
@@ -41,30 +41,30 @@ const respond_with_pagination = (res, payload) => {
 }
 
 const respond_with_error = (res, message = "Something went wrong :(", details = [], status = 400) => {
-    logger.log('info', '\n')
+    
     logger.log('error', `Error response: ${message}, Details: ${JSON.stringify(details)}`)
-    logger.log('info', '\n')
+    
     res.status(status).json({ message, details })
 }
 
 const respond_with_not_found = (res, message = "Resource not found :(") => {
-    logger.log('info', '\n')
+    
     logger.log('warn', `Resource not found: ${message}`)
-    logger.log('info', '\n')
+    
     res.status(404).json({ message })
 }
 
 const respond_with_unauthorized = (res, message = "Unauthorized! -_-") => {
-    logger.log('info', '\n')
+    
     logger.log('warn', `Unauthorized access: ${message}`)
-    logger.log('info', '\n')
+    
     res.status(401).json({ message })
 }
 
 const respond_with_internal_server_error = (res, message = "Internal Server Error", details = []) => {
-    logger.log('info', '\n')
+    
     logger.log('error', `Internal Server Error: ${message}, Details: ${JSON.stringify(details)}`)
-    logger.log('info', '\n')
+    
     res.status(500).json({ message, details })
 }
 

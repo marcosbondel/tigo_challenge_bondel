@@ -92,9 +92,9 @@ const create_mock = async(request, response) => {
         return respond_with_success(response, result)
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error creating mock: ${error.message}`)
-        logger.log('info', '\n')
+        
         if (error.name === 'ValidationError' || error.name === 'MongoServerError') {
             return respond_with_error(response, 'Validation failed', error.errors)
         }
@@ -111,9 +111,9 @@ const find_mocks = async(request, response) => {
         return respond_with_success(response, result )
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error finding mocks: ${error.message}`)
-        logger.log('info', '\n')
+        
         return respond_with_internal_server_error(response)
     }
 }
@@ -130,9 +130,9 @@ const find_mock_by_id = async(request, response) => {
         return respond_with_success(response, result )
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error finding mock by ID: ${error.message}`)
-        logger.log('info', '\n')
+        
         return respond_with_internal_server_error(response)
     }
 }
@@ -151,9 +151,9 @@ const update_mock = async(request, response) => {
         
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error updating mock: ${error.message}`)
-        logger.log('info', '\n')
+        
         return respond_with_internal_server_error(response)
     }
 }
@@ -176,9 +176,9 @@ const remove_mock = async(request, response) => {
         
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error deleting mock: ${error.message}`)
-        logger.log('info', '\n')
+        
         return respond_with_internal_server_error(response)
     }
 }

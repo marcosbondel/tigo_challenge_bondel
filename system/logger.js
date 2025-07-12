@@ -40,19 +40,17 @@ if (!fs.existsSync(log_dir)) fs.mkdirSync(log_dir)
 const log_file = path.join(log_dir, `${env}.log`)
 
 const log_format = format.combine(
-  format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  format.printf(({ timestamp, level, message }) => {
-    return `${timestamp} [${level.toUpperCase()}] ${message}`
-  })
+    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    format.printf(info => `${info.timestamp} [${info.level.toUpperCase()}] ${info.message}\n`)
 )
 
 const logger = createLogger({
-  level: 'info',
-  format: log_format,
-  transports: [
-    new transports.File({ filename: log_file }),
-    new transports.Console()
-  ]
+    level: 'info',
+    format: log_format,
+    transports: [
+        new transports.File({ filename: log_file }),
+        new transports.Console()
+    ]
 })
 
 module.exports = {logger}

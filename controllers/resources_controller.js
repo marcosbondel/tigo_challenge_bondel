@@ -32,6 +32,7 @@ const {
     respond_with_internal_server_error,
     respond_with_not_found,
     logger,
+    respond_with_unauthorized,
 } = require('../system')
 const { 
     find_document_by_params, 
@@ -52,12 +53,12 @@ const find_resources = async(request, response) => {
         if (!mock.success) {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
-
+        
         if(mock.data?.headers?.includes('Authorization')) {
             // If the mock requires authentication, we check for the access token in the request headers
             let access_token = request.headers['authorization']?.split(' ')[1]
             if (!access_token) {
-                return respond_with_error(response, 'Access token is required for this resource')
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
             }
         }
 
@@ -69,9 +70,9 @@ const find_resources = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error creating resource: ${error.message}`)
-        logger.log('info', '\n')
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -85,6 +86,14 @@ const find_resource = async(request, response) => {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+        }
+        
         let result = await find_document_by_params(resource, { _id: new ObjectId(id) })
         if (!result.success) {
             return respond_with_error(response, `Failed to find resource: ${result.message}`)
@@ -93,9 +102,9 @@ const find_resource = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error creating resource: ${error.message}`)
-        logger.log('info', '\n')
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -108,6 +117,14 @@ const create_resource = async(request, response) => {
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
+        }
+        
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
         }
 
         if(!arrays_equal_ignore_order(mock.data.body_params, Object.keys(body))) {
@@ -126,9 +143,9 @@ const create_resource = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error creating resource: ${error.message}`)
-        logger.log('info', '\n')
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -141,6 +158,14 @@ const update_resource = async(request, response) => {
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
+        }
+
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
         }
 
         if(!arrays_equal_ignore_order(mock.data.body_params, Object.keys(body))) {
@@ -159,9 +184,9 @@ const update_resource = async(request, response) => {
         return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error updating resource: ${error.message}`)
-        logger.log('info', '\n')
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -175,6 +200,14 @@ const delete_resource = async(request, response) => {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+        }
+
         let result = await delete_collection_document(resource, id)
 
         if (!result.success) {
@@ -184,9 +217,9 @@ const delete_resource = async(request, response) => {
         return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
-        logger.log('info', '\n')
+        
         logger.error(`Error deleting resource: ${error.message}`)
-        logger.log('info', '\n')
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
