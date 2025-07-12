@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-<i> Documentation generated with the help of AI </i>
+  <i> Documentation generated with the help of AI </i>
 </p>
 
 ---
@@ -81,6 +81,7 @@ Puedes consultar los requerimientos iniciales del proyecto [aquí](./docs/requir
     - [2.5. Eliminar Recurso Dinámico](#25-eliminar-recurso-dinámico)
 - [🛡️ Tokens de Acceso](#️-tokens-de-acceso)
 - [🧪 Ejemplo de Prueba con `curl`](#-ejemplo-de-prueba-con-curl)
+- [🧪 Ejemplo de Prueba en Postman](#-ejemplo-de-prueba-en-postman)
 - [🤖 Uso de Herramientas de IA](#-uso-de-herramientas-de-ia)
 - [📜 Licencia](#-licencia)
 
@@ -888,17 +889,38 @@ Authorization: Bearer <access_token>
 Puedes probar la creación de una configuración de mock usando `curl` así:
 
 ```bash
-curl -X POST http://localhost:3001/configure-mock \
-  -H "Content-Type: application/json" \
-  -d '{
-    "resource": "clientes",
-    "version": "1",
-    "method": "GET",
-    "headers": ["Authorization"],
-    "query_params": ["nombre", "activo"],
-    "content_type": "application/json"
-  }'
+curl -X GET http://localhost:3001/ -H "Content-Type: application/json" 
 ```
+
+-----
+
+## 🧪 Ejemplo de Prueba en Postman
+
+<p align="center">
+  <img width="600" alt="TigoMock logo" src="./docs/imgs/1.png" />
+</p>
+
+Primero, asegurate te seleccionar el ambiente de desarrollo como `production`.
+<p align="center">
+  <img width="600" alt="TigoMock logo" src="./docs/imgs/2.png" />
+</p>
+
+Y Listo, ahora estas listo para probar el proyecto en Postman.
+
+En el panel izquier podras encontrar todos los endpoints disponibles.
+
+<p align="center">
+  <img width="600" alt="TigoMock logo" src="./docs/imgs/3.png" />
+</p>
+
+Realiza las modificaciones respectivas en los parámetros y estás listo para dar clic en el botón color azul `Send`.
+
+<p align="center">
+  <img width="600" alt="TigoMock logo" src="./docs/imgs/4.png" />
+</p>
+
+Podrás ver las respuestas en el panel de abajo.
+
 
 -----
 
