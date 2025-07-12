@@ -41,6 +41,7 @@ const {
     list_collection_documents,
     delete_collection_document,
 } = require('../config/database')
+const { validate_jwt } = require('../utils')
 const { arrays_equal_ignore_order } = require('../utils')
 const { ObjectId } = require('mongodb')
 
@@ -59,6 +60,13 @@ const find_resources = async(request, response) => {
             let access_token = request.headers['authorization']?.split(' ')[1]
             if (!access_token) {
                 return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
             }
         }
 
@@ -92,6 +100,13 @@ const find_resource = async(request, response) => {
             if (!access_token) {
                 return respond_with_unauthorized(response, 'Access token is required for this resource')
             }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
+            }
         }
         
         let result = await find_document_by_params(resource, { _id: new ObjectId(id) })
@@ -124,6 +139,13 @@ const create_resource = async(request, response) => {
             let access_token = request.headers['authorization']?.split(' ')[1]
             if (!access_token) {
                 return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
             }
         }
 
@@ -166,6 +188,13 @@ const update_resource = async(request, response) => {
             if (!access_token) {
                 return respond_with_unauthorized(response, 'Access token is required for this resource')
             }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
+            }
         }
 
         if(!arrays_equal_ignore_order(mock.data.body_params, Object.keys(body))) {
@@ -205,6 +234,13 @@ const delete_resource = async(request, response) => {
             let access_token = request.headers['authorization']?.split(' ')[1]
             if (!access_token) {
                 return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
             }
         }
 

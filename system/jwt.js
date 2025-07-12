@@ -29,5 +29,5 @@ SOFTWARE.
 const jwt = require('jsonwebtoken')
 
 exports.generate_token = (data, secret = process.env.JWT_SECRET, expiresIn = process.env.JWT_EXPIRATION) => {
-  return jwt.sign(data, secret, { expiresIn })
+    return jwt.sign(data, secret, { expiresIn })
 }

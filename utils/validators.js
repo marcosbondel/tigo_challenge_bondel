@@ -25,7 +25,36 @@ SOFTWARE.
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 ·
 */
+const jwt = require('jsonwebtoken')
 
-const validate_existance = async() => {
-    
+const validate_jwt = (url_s, method_s, token) => {
+
+    try {
+        const { url, method } = jwt.verify(token, process.env.JWT_SECRET)
+        
+        if(url !== url_s || method !== method_s) {
+            return {
+                success: false,
+                message: "Invalid token for this URL or method",
+            }
+        }
+
+        return {
+            success: true,
+            data: {
+                url,
+                method
+            }
+        }
+
+    } catch (error) {
+        return {
+            success: false,
+            message: "Invalid or expired token",
+        }
+    }
+}
+
+module.exports = {
+    validate_jwt,
 }
