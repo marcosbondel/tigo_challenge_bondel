@@ -2,7 +2,7 @@
     <img width="300" alt="TigoMock logo" src="./docs/tigo_logo.png" />
 </p>
 
-<h3 align="center">Una aplicación basada en API diseñada para la creación de mocks de servicios REST.</h3>
+<h3 align="center">Tigo Challenge - API-based app intented for mocks of REST services</h3>
 <hr/>
 
 <p align="center">
