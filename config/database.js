@@ -189,7 +189,7 @@ const find_document_by_params = async(collection_name, params) => {
 }
 
 
-const list_collection_documents = async (collection_name) => {
+const list_collection_documents = async (collection_name, query = {}) => {
     if (!mongo_client_instance) {
         mongo_client_instance = await mongodb_connection()
     }
@@ -205,7 +205,7 @@ const list_collection_documents = async (collection_name) => {
 
         const collection = db.collection(collection_name)
 
-        const documents = await collection.find({}).toArray()
+        const documents = await collection.find(query).toArray()
 
         return { success: true, data: documents }
     } catch (error) {

@@ -31,7 +31,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const express = require('express')
 const morgan = require('morgan')
-const {logger} = require('../system')
+const { logger } = require('../system')
 const fs = require('fs')
 const path = require('path')
 
@@ -39,8 +39,6 @@ const { mock_routes, resource_routes } = require('../routes')
 
 // · Setup log directory
 const log_directory = path.join(__dirname, '../logs')
-
-// · Create log directory if not exists
 if (!fs.existsSync(log_directory)) {
     fs.mkdirSync(log_directory)
 }
@@ -66,18 +64,34 @@ const morgan_format = (tokens, req, res) => {
         `User-Agent: ${tokens['user-agent'](req, res)}`
     ].join(' ')
 }
-
-// Log to file and console using Winston
 app.use(morgan(morgan_format, {
     stream: {
         write: message => logger.info(message.trim())
     }
 }))
 
-
 // · Define endpoints and nested
 app.use('/', mock_routes)
 app.use('/api', resource_routes)
+
+// · Middleware para rutas no encontradas (404)
+app.use((req, res, next) => {
+    const message = `Endpoint not found: ${req.originalUrl}`
+    logger.warn(message)
+    res.status(404).json({
+        status: 'error',
+        message
+    })
+})
+
+// · Middleware para errores internos del servidor (500)
+app.use((err, req, res, next) => {
+    logger.error(`Internal server error: ${err.message}`)
+    res.status(500).json({
+        status: 'error',
+        message: 'Something went wrong. Try it out later.'
+    })
+})
 
 module.exports = {
     app

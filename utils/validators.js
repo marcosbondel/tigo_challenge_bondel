@@ -25,32 +25,36 @@ SOFTWARE.
 · ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~     ~·~
 ·
 */
+const jwt = require('jsonwebtoken')
 
-// · Imports
-// logger.js
-const { createLogger, format, transports } = require('winston')
-const path = require('path')
-const fs = require('fs')
+const validate_jwt = (url_s, method_s, token) => {
 
-// Crea logs/logs/ si no existe
-const env = process.env.NODE_ENV || 'development'
-const log_dir = path.join(__dirname, '../logs')
-if (!fs.existsSync(log_dir)) fs.mkdirSync(log_dir)
+    try {
+        const { url, method } = jwt.verify(token, process.env.JWT_SECRET)
+        
+        if(url !== url_s || method !== method_s) {
+            return {
+                success: false,
+                message: "Invalid token for this URL or method",
+            }
+        }
 
-const log_file = path.join(log_dir, `${env}.log`)
+        return {
+            success: true,
+            data: {
+                url,
+                method
+            }
+        }
 
-const log_format = format.combine(
-    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    format.printf(info => `${info.timestamp} [${info.level.toUpperCase()}] ${info.message}\n`)
-)
+    } catch (error) {
+        return {
+            success: false,
+            message: "Invalid or expired token",
+        }
+    }
+}
 
-const logger = createLogger({
-    level: 'info',
-    format: log_format,
-    transports: [
-        new transports.File({ filename: log_file }),
-        new transports.Console()
-    ]
-})
-
-module.exports = {logger}
+module.exports = {
+    validate_jwt,
+}

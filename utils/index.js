@@ -27,7 +27,9 @@ SOFTWARE.
 */
 
 const { arrays_equal_ignore_order } = require('./compare')
+const { validate_jwt } = require('./validators')
 
 module.exports = {
-    arrays_equal_ignore_order
+    arrays_equal_ignore_order,
+    validate_jwt,
 }

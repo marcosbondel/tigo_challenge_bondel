@@ -32,6 +32,7 @@ const {
     respond_with_internal_server_error,
     respond_with_not_found,
     logger,
+    respond_with_unauthorized,
 } = require('../system')
 const { 
     find_document_by_params, 
@@ -40,6 +41,7 @@ const {
     list_collection_documents,
     delete_collection_document,
 } = require('../config/database')
+const { validate_jwt } = require('../utils')
 const { arrays_equal_ignore_order } = require('../utils')
 const { ObjectId } = require('mongodb')
 
@@ -53,15 +55,45 @@ const find_resources = async(request, response) => {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
+        }
+        
         if(mock.data?.headers?.includes('Authorization')) {
             // If the mock requires authentication, we check for the access token in the request headers
             let access_token = request.headers['authorization']?.split(' ')[1]
             if (!access_token) {
-                return respond_with_error(response, 'Access token is required for this resource')
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
             }
         }
 
-        let result = await list_collection_documents(resource)
+        let query = {}
+        if(mock.data?.query_params) {
+            // If the mock has query parameters, we check if they match the request
+            let query_params = Object.keys(request.query)
+            if(!arrays_equal_ignore_order(mock.data.query_params, query_params)) {
+                return respond_with_error(
+                    response, 
+                    `Query parameters do not match the mock definition. Expected: ${mock.data.query_params.join(', ')}, Received: ${query_params.join(', ')}`
+                )
+            }
+
+            // If the mock has query parameters, we filter the results based on them
+            mock.data.query_params.forEach(param => {
+                if(request.query[param]) {
+                    query[param] = request.query[param]
+                }
+            })
+        }
+
+        let result = await list_collection_documents(resource, query)
         if (!result.success) {
             return respond_with_error(response, `Failed to list resources: ${result.message}`)
         }
@@ -69,9 +101,9 @@ const find_resources = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
+        
         logger.error(`Error creating resource: ${error.message}`)
-        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
-        logger.error(`Error finding resources: ${error.message}`)
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -85,6 +117,25 @@ const find_resource = async(request, response) => {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
+        }
+
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
+            }
+        }
+        
         let result = await find_document_by_params(resource, { _id: new ObjectId(id) })
         if (!result.success) {
             return respond_with_error(response, `Failed to find resource: ${result.message}`)
@@ -93,8 +144,9 @@ const find_resource = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
+        
         logger.error(`Error creating resource: ${error.message}`)
-        return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -107,6 +159,25 @@ const create_resource = async(request, response) => {
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
+        }
+
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
+        }
+        
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
+            }
         }
 
         if(!arrays_equal_ignore_order(mock.data.body_params, Object.keys(body))) {
@@ -125,7 +196,9 @@ const create_resource = async(request, response) => {
         return respond_with_success(response, result.data)
     } catch (error) {
         console.log(error)
+        
         logger.error(`Error creating resource: ${error.message}`)
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -138,6 +211,25 @@ const update_resource = async(request, response) => {
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
+        }
+
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
+        }
+
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
+            }
         }
 
         if(!arrays_equal_ignore_order(mock.data.body_params, Object.keys(body))) {
@@ -156,7 +248,9 @@ const update_resource = async(request, response) => {
         return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
+        
         logger.error(`Error updating resource: ${error.message}`)
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
@@ -170,6 +264,25 @@ const delete_resource = async(request, response) => {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
+        }
+
+        if(mock.data?.headers?.includes('Authorization')) {
+            // If the mock requires authentication, we check for the access token in the request headers
+            let access_token = request.headers['authorization']?.split(' ')[1]
+            if (!access_token) {
+                return respond_with_unauthorized(response, 'Access token is required for this resource')
+            }
+
+            // Now, we verify the access token
+            let validation = validate_jwt(`/api/${version}/${resource}`, request.method, access_token)
+            
+            if (!validation.success) {
+                return respond_with_unauthorized(response, validation.message)
+            }
+        }
+
         let result = await delete_collection_document(resource, id)
 
         if (!result.success) {
@@ -179,7 +292,9 @@ const delete_resource = async(request, response) => {
         return respond_with_success(response, result.message)
     } catch (error) {
         console.log(error)
+        
         logger.error(`Error deleting resource: ${error.message}`)
+        
         return respond_with_internal_server_error(response, 'An error occurred while processing your request', [error.message])
     }
 }
