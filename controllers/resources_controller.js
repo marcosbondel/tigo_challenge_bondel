@@ -54,6 +54,10 @@ const find_resources = async(request, response) => {
         if (!mock.success) {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
+
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
+        }
         
         if(mock.data?.headers?.includes('Authorization')) {
             // If the mock requires authentication, we check for the access token in the request headers
@@ -70,7 +74,26 @@ const find_resources = async(request, response) => {
             }
         }
 
-        let result = await list_collection_documents(resource)
+        let query = {}
+        if(mock.data?.query_params) {
+            // If the mock has query parameters, we check if they match the request
+            let query_params = Object.keys(request.query)
+            if(!arrays_equal_ignore_order(mock.data.query_params, query_params)) {
+                return respond_with_error(
+                    response, 
+                    `Query parameters do not match the mock definition. Expected: ${mock.data.query_params.join(', ')}, Received: ${query_params.join(', ')}`
+                )
+            }
+
+            // If the mock has query parameters, we filter the results based on them
+            mock.data.query_params.forEach(param => {
+                if(request.query[param]) {
+                    query[param] = request.query[param]
+                }
+            })
+        }
+
+        let result = await list_collection_documents(resource, query)
         if (!result.success) {
             return respond_with_error(response, `Failed to list resources: ${result.message}`)
         }
@@ -92,6 +115,10 @@ const find_resource = async(request, response) => {
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
+        }
+
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
         }
 
         if(mock.data?.headers?.includes('Authorization')) {
@@ -132,6 +159,10 @@ const create_resource = async(request, response) => {
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
+        }
+
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
         }
         
         if(mock.data?.headers?.includes('Authorization')) {
@@ -182,6 +213,10 @@ const update_resource = async(request, response) => {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
         }
 
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
+        }
+
         if(mock.data?.headers?.includes('Authorization')) {
             // If the mock requires authentication, we check for the access token in the request headers
             let access_token = request.headers['authorization']?.split(' ')[1]
@@ -227,6 +262,10 @@ const delete_resource = async(request, response) => {
         let mock = await find_document_by_params('mocks', { resource, version })
         if (!mock.success) {
             return respond_with_not_found(response, `Mock "${resource}"not found`)
+        }
+
+        if(mock.data.status != 'enabled') {
+            return respond_with_error(response, `Mock "${resource}" is not enabled`)
         }
 
         if(mock.data?.headers?.includes('Authorization')) {
